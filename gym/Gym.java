@@ -36,7 +36,6 @@ public class Gym {
         setSalary(salary);
     }
 
-
     public void setSalary(int secretarySalary) {
         this.secretarySalary = secretarySalary;
     }
@@ -45,9 +44,6 @@ public class Gym {
         return this.secretary;
     }
 
-    public int getGymBalance() {
-        return this.gymBalance;
-    }
 
     public void addToGymBalance(int amount) {
         this.gymBalance += amount;

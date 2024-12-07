@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import gym.Gym;
 import gym.management.Sessions.*;
 
 public class SessionRegistry {
@@ -21,33 +22,33 @@ public class SessionRegistry {
         return instance;
     }
 
-    public void addSession(Session session) {
+    public void addSession(Session session , String key) throws SecurityException {
+        if (!Gym.getInstance().getSecretary().getKey().equals(key))
+            throw new SecurityException("Unmatched key.\nAccess denied.");
+
         sessions.add(session);
     }
 
-    public boolean isSessionRegistered(Session session) {
+    public boolean isSessionRegistered(Session session, String key) throws SecurityException {
+        if (!Gym.getInstance().getSecretary().getKey().equals(key))
+            throw new SecurityException("Unmatched key.\nAccess denied.");
+
         return sessions.contains(session);
     }
 
-    public List<Session> getAllSessions() {
+    public List<Session> getAllSessions(String key) throws SecurityException {
+        if (!Gym.getInstance().getSecretary().getKey().equals(key))
+            throw new SecurityException("Unmatched key.\nAccess denied.");
+
         return new ArrayList<>(sessions);
     }
 
-    public List<Session> getSessionsByType(SessionType type) {
-        List<Session> result = new ArrayList<>();
-        for (Session session : sessions) {
-            if (session.getSessionType() == type) {
-                result.add(session);
-            }
-        }
-        return result;
-    }
 
     @Override
     public String toString() {
         StringBuilder sessionsData = new StringBuilder();
 
-        for (Session session : getAllSessions())
+        for (Session session : getAllSessions(Gym.getInstance().getSecretary().getKey()))
             sessionsData.append(session).append("\n");
 
         return sessionsData.toString();

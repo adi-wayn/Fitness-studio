@@ -49,7 +49,7 @@ public class Person {
 
     }
 
-    public void addToBalance(int amount, String secretaryKey){
+    public void addToBalance(int amount, String secretaryKey) throws SecurityException{
         String key = Gym.getInstance().getSecretary().getKey();
         if (!secretaryKey.equals(key))
             throw new SecurityException("Wrong Key,access denied");

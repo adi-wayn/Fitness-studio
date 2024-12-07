@@ -1,6 +1,5 @@
 package gym.management;
-import gym.customers.Client;
-
+import gym.Gym;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,15 +20,24 @@ public class InstructorRegistry {
         return instance;
     }
 
-    public void addInstructor(Instructor instructor) {
-        instructors.add(instructor);
+    public void addInstructor(Instructor instructor, String key) throws SecurityException {
+        if (!Gym.getInstance().getSecretary().getKey().equals(key))
+            throw new SecurityException("Unmatched key.\nAccess denied.");
+
+        this.instructors.add(instructor);
     }
 
-    public boolean isInstructorRegistered(Instructor instructor) {
+    public boolean isInstructorRegistered(Instructor instructor, String key) throws SecurityException {
+        if (!Gym.getInstance().getSecretary().getKey().equals(key))
+            throw new SecurityException("Unmatched key.\nAccess denied.");
+
         return instructors.contains(instructor);
     }
 
-    public List<Instructor> getAllInstructors() {
+    public List<Instructor> getAllInstructors(String key) throws SecurityException {
+        if (!Gym.getInstance().getSecretary().getKey().equals(key))
+            throw new SecurityException("Unmatched key.\nAccess denied.");
+
         return new ArrayList<>(instructors);
     }
 
@@ -37,7 +45,7 @@ public class InstructorRegistry {
     public String toString() {
         StringBuilder instructorsData = new StringBuilder();
 
-        for (Instructor instructor : getAllInstructors())
+        for (Instructor instructor : getAllInstructors(Gym.getInstance().getSecretary().getKey()))
             instructorsData.append(instructor).append("\n");
 
         return instructorsData.toString();

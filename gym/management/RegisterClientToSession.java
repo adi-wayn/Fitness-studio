@@ -25,16 +25,21 @@ public class RegisterClientToSession {
         return instance;
     }
 
-    public Map<Session, Set<Client>> getClientListMap() {
+    public Map<Session, Set<Client>> getClientListMap(String key) throws SecurityException {
+        if (!Gym.getInstance().getSecretary().getKey().equals(key))
+            throw new SecurityException("Unmatched key.\nAccess denied.");
+
         return clientToSessionListMap;
     }
 
-    public void addToMap(Session s1, Client c1) {
+    public void addToMap(Session s1, Client c1 , String key) throws SecurityException {
+        if (!Gym.getInstance().getSecretary().getKey().equals(key))
+            throw new SecurityException("Unmatched key.\nAccess denied.");
 
         if (isClientRegisteredToSession(c1, s1)) {
             throw new DuplicateClientException("Error: The client is already registered for this lesson");
         }
-        if (!ClientRegistry.getInstance().isClientRegistered(c1))
+        if (!ClientRegistry.getInstance().isClientRegistered(c1 , key))
             throw new ClientNotRegisteredException("Error: The client is not registered with the gym and cannot enroll in lessons");
 
         if (s1.hasPast())

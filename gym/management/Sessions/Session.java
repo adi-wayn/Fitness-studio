@@ -8,9 +8,9 @@ import java.time.format.DateTimeFormatter;
 
 public class Session {
     private final SessionType sessionType;
-    private String date;
+    private final String date;
     private final ForumType forumType;
-    private Instructor instructor;
+    private final Instructor instructor;
 
     public Session(SessionType sessionType, String date, ForumType forumType,Instructor instructor) {
         this.sessionType = sessionType;
@@ -31,10 +31,6 @@ public class Session {
         return date;
     }
 
-    public Instructor getInstructor() {
-        return instructor;
-    }
-
     public boolean hasPast() {
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
@@ -47,7 +43,7 @@ public class Session {
     @Override
     public String toString() {
         return "Session Type: " + sessionType + " | Date: " + date + " | Forum: " + forumType + " | Instructor: " + instructor.getPerson().getName() +
-                " | Participants: " + RegisterClientToSession.getInstance().getClientListMap().get(this).size() + "/" + sessionType.getCapacity();
+                " | Participants: " + RegisterClientToSession.getInstance().getClientListMap(Gym.getInstance().getSecretary().getKey()).get(this).size() + "/" + sessionType.getCapacity();
     }
 
 }

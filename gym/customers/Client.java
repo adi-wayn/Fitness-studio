@@ -1,9 +1,9 @@
 package gym.customers;
 import gym.Gym;
-import gym.management.Observer;
+import gym.management.MessageObserver;
 import java.util.ArrayList;
 
-public class Client implements Observer {
+public class Client implements MessageObserver {
     private final ArrayList<String> notifications;
     private final Person person;
 
