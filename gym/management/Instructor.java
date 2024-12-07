@@ -33,6 +33,10 @@ public class Instructor {
         return this.getSessionList().contains(type);
     }
 
+    public int getId(){
+        return this.person.getId();
+    }
+
     @Override
     public String toString() {
         StringBuilder certifiedClasses = new StringBuilder();
@@ -44,7 +48,7 @@ public class Instructor {
                 certifiedClasses.append(sessionType);
         }
 
-        return "Name: " + person.getName() + " | Gender: " + person.getGender() + " | Birthday: " + person.getBirthDate() + " | Age: " + person.getAge() + " | Balance: " + person.getBalance() +
+        return "ID: " + person.getId() + " | Name: " + person.getName() + " | Gender: " + person.getGender() + " | Birthday: " + person.getBirthDate() + " | Age: " + person.getAge() + " | Balance: " + person.getBalance() +
         " | Role: Instructor | Salary per Hour: " + hourSalary + " | Certified Classes: " + certifiedClasses;
     }
 }

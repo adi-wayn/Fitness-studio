@@ -1,10 +1,8 @@
 package gym.management;
 import gym.Gym;
 import gym.customers.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 
 public class ClientRegistry {
     private static ClientRegistry instance;
@@ -60,7 +58,10 @@ public class ClientRegistry {
     public String toString() {
         StringBuilder clientsData = new StringBuilder();
 
-        for (Client client : getAllClients(Gym.getInstance().getSecretary().getKey()))
+        List<Client> sortedList =  getAllClients(Gym.getInstance().getSecretary().getKey());
+        sortedList.sort(Comparator.comparingInt(Client::getId));
+
+        for (Client client : sortedList)
             clientsData.append(client).append("\n");
 
         return clientsData.toString();

@@ -49,7 +49,7 @@ public class RegisterClientToSession {
             switch (s1.getForumType()) {
                 case Seniors -> Gym.getInstance().getSecretary().getActionPrints().add("Failed registration: Client doesn't meet the age requirements for this session (Seniors)");
 
-                case Male ,Female -> Gym.getInstance().getSecretary().getActionPrints().add("Failed registration: Client's gender doesn't match the session's gender requirements)");
+                case Male ,Female -> Gym.getInstance().getSecretary().getActionPrints().add("Failed registration: Client's gender doesn't match the session's gender requirements");
             }
         }
 
@@ -64,7 +64,7 @@ public class RegisterClientToSession {
             c1.getPerson().subtractFromBalance(s1.getSessionType().getPrice());
             Gym.getInstance().addToGymBalance(s1.getSessionType().getPrice());
             this.clientToSessionListMap.get(s1).add(c1);
-            Gym.getInstance().getSecretary().getActionPrints().add("Registered client: " + c1.getName() + " to session: " + s1.getSessionType() + " on " + s1.getDate() + " for price: " + s1.getSessionType().getPrice());
+            Gym.getInstance().getSecretary().getActionPrints().add("Registered client: " + c1.getName() + " to session: " + s1.getSessionType() + " on " + s1.getSpecialDate() + " for price: " + s1.getSessionType().getPrice());
         }
 
     }

@@ -1,10 +1,8 @@
 package gym.management;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import gym.Gym;
+import gym.customers.Client;
 import gym.management.Sessions.*;
 
 public class SessionRegistry {
@@ -48,7 +46,10 @@ public class SessionRegistry {
     public String toString() {
         StringBuilder sessionsData = new StringBuilder();
 
-        for (Session session : getAllSessions(Gym.getInstance().getSecretary().getKey()))
+        List<Session> sortedList =  getAllSessions(Gym.getInstance().getSecretary().getKey());
+        sortedList.sort(Comparator.comparingInt(Session::getSessionId));
+
+        for (Session session : sortedList)
             sessionsData.append(session).append("\n");
 
         return sessionsData.toString();

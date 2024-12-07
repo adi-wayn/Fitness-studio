@@ -7,16 +7,28 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 public class Session {
+    private static int sessionIdCounter = 1;
+    private int sessionId;
     private final SessionType sessionType;
     private final String date;
     private final ForumType forumType;
     private final Instructor instructor;
 
     public Session(SessionType sessionType, String date, ForumType forumType,Instructor instructor) {
+        this.sessionId = sessionIdCounter;
+        sessionIdCounter++;
         this.sessionType = sessionType;
         this.date = date;
         this.forumType = forumType;
         this.instructor = instructor;
+    }
+
+    public int getSessionId() {
+        return this.sessionId;
+    }
+
+    public Instructor getInstructor() {
+        return this.instructor;
     }
 
     public SessionType getSessionType() {
@@ -29,6 +41,14 @@ public class Session {
 
     public String getDate() {
         return date;
+    }
+
+    public String getSpecialDate(){
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime dateTime = LocalDateTime.parse(this.date, inputFormatter);
+
+        return dateTime.format(outputFormatter);
     }
 
     public boolean hasPast() {

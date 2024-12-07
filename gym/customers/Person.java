@@ -1,19 +1,29 @@
 package gym.customers;
 import gym.Gym;
+import gym.management.Instructor;
+
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 public class Person {
+    private static int idCounter = 1111;
+    private  int id;
     private final String name;
     private int balance;
     private final Gender gender;
     private final String birthDate;
 
     public Person(String name , int balance, Gender gender , String birthDate){
+        this.id = idCounter;
+        idCounter++;
         this.name = name;
         this.balance = balance;
         this.gender = gender;
         this.birthDate = birthDate;
+    }
+
+    public int getId(){
+        return this.id;
     }
 
     public Person(Person other) {
@@ -36,11 +46,7 @@ public class Person {
     }
 
     public int getAge() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate birthDate = LocalDate.parse(this.birthDate, formatter);
-        LocalDate currentDate = LocalDate.now();
-
-        return Period.between(birthDate, currentDate).getYears();
+        return 2024 - Integer.parseInt(this.birthDate.substring(6 , 10));
     }
 
     public void subtractFromBalance(int amount) {
@@ -72,23 +78,20 @@ public class Person {
 
     }
 
-    public boolean isSenior(){
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        int currYear = currentDateTime.getYear();
-        int currMonth = currentDateTime.getMonthValue();
-        int currDay = currentDateTime.getDayOfMonth();
+    public boolean isSenior() {
 
-        int year = Integer.parseInt(this.birthDate.substring(6,9));
-        int month = Integer.parseInt(this.birthDate.substring(3, 4));
-        int day = Integer.parseInt(this.birthDate.substring(0, 1));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate birthDate = LocalDate.parse(this.birthDate, formatter);
 
-        int yearRemainder = currYear - year;
-        int monthRemainder = currMonth - month;
-        int dayRemainder = currDay - day;
+        LocalDate currentDate = LocalDate.now();
+        int age = currentDate.getYear() - birthDate.getYear();
+        if (currentDate.getMonthValue() < birthDate.getMonthValue() ||
+                (currentDate.getMonthValue() == birthDate.getMonthValue() &&
+                        currentDate.getDayOfMonth() < birthDate.getDayOfMonth())) {
+            age--;
+        }
 
-        if (yearRemainder > 65)
-            return true;
-
-        else return yearRemainder == 65  && monthRemainder >= 0 && dayRemainder >= 0;
+        return age >= 65;
     }
+
 }

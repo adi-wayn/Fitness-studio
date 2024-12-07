@@ -1,9 +1,8 @@
 package gym.management;
 import gym.Gym;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import gym.customers.Person;
+
+import java.util.*;
 
 public class InstructorRegistry {
     private static InstructorRegistry instance;
@@ -44,8 +43,10 @@ public class InstructorRegistry {
     @Override
     public String toString() {
         StringBuilder instructorsData = new StringBuilder();
+        List<Instructor> sortedList =  getAllInstructors(Gym.getInstance().getSecretary().getKey());
+        sortedList.sort(Comparator.comparingInt(Instructor::getId));
 
-        for (Instructor instructor : getAllInstructors(Gym.getInstance().getSecretary().getKey()))
+        for (Instructor instructor : sortedList)
             instructorsData.append(instructor).append("\n");
 
         return instructorsData.toString();

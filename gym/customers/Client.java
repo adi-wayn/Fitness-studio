@@ -16,6 +16,10 @@ public class Client implements MessageObserver {
         return person;
     }
 
+    public int getId(){
+        return this.person.getId();
+    }
+
     public String getName() {
         return this.person.getName();
     }
@@ -35,6 +39,6 @@ public class Client implements MessageObserver {
 
     @Override
     public String toString() {
-        return "Name: " + person.getName() + " | Gender: " + person.getGender() + " | Birthday: " + person.getBirthDate() + " | Age: " + person.getAge() + " | Balance: " + person.getBalance();
+        return "ID: " + person.getId() + " | Name: " + person.getName() + " | Gender: " + person.getGender() + " | Birthday: " + person.getBirthDate() + " | Age: " + person.getAge() + " | Balance: " + person.getBalance();
     }
 }

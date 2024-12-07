@@ -44,13 +44,12 @@ public class Gym {
         return this.secretary;
     }
 
+    public int getGymBalance() {
+        return this.gymBalance;
+    }
 
     public void addToGymBalance(int amount) {
         this.gymBalance += amount;
-    }
-
-    public void subtractFromGymBalance(int amount) {
-        this.gymBalance -= amount;
     }
 
     @Override
