@@ -1,11 +1,10 @@
 package gym.management;
 import gym.customers.Person;
-import gym.management.Sessions.Session;
 import gym.management.Sessions.SessionType;
 
 import java.util.List;
 
-public class Instructor {
+public class Instructor implements Registrable{
     private final Person person;
     private int hourSalary;
     private List<SessionType> sessionList;
@@ -33,6 +32,7 @@ public class Instructor {
         return this.getSessionList().contains(type);
     }
 
+    @Override
     public int getId(){
         return this.person.getId();
     }

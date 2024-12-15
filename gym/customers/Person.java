@@ -1,7 +1,5 @@
 package gym.customers;
-import gym.Gym;
-import gym.management.Instructor;
-
+import gym.management.Gym;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
@@ -24,13 +22,6 @@ public class Person {
 
     public int getId(){
         return this.id;
-    }
-
-    public Person(Person other) {
-        this.name = other.getName();
-        this.balance = other.getBalance();
-        this.gender = other.getGender();
-        this.birthDate = other.getBirthDate();
     }
 
     public Gender getGender() {

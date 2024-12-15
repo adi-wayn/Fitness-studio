@@ -1,7 +1,6 @@
 package gym.management;
 import gym.Exception.ClientNotRegisteredException;
 import gym.Exception.DuplicateClientException;
-import gym.Gym;
 import gym.customers.Client;
 import gym.customers.Gender;
 import gym.management.Sessions.ForumType;
@@ -36,10 +35,11 @@ public class RegisterClientToSession {
         if (!Gym.getInstance().getSecretary().getKey().equals(key))
             throw new SecurityException("Unmatched key.\nAccess denied.");
 
-        if (isClientRegisteredToSession(c1, s1)) {
+        if (isClientRegisteredToSession(c1, s1))
             throw new DuplicateClientException("Error: The client is already registered for this lesson");
-        }
-        if (!ClientRegistry.getInstance().isClientRegistered(c1 , key))
+
+
+        if (!Gym.getInstance().getSecretary().getClientRegistry().isRegistered(c1 , key))
             throw new ClientNotRegisteredException("Error: The client is not registered with the gym and cannot enroll in lessons");
 
         if (s1.hasPast())
@@ -61,10 +61,10 @@ public class RegisterClientToSession {
 
 
         if (!s1.hasPast() && !isFull(s1) && canPay(c1, s1) && isForumMatched(c1, s1.getForumType())) {
-            c1.getPerson().subtractFromBalance(s1.getSessionType().getPrice());
-            Gym.getInstance().addToGymBalance(s1.getSessionType().getPrice());
+            c1.getPerson().subtractFromBalance(s1.getPrice());
+            Gym.getInstance().addToGymBalance(s1.getPrice());
             this.clientToSessionListMap.get(s1).add(c1);
-            Gym.getInstance().getSecretary().getActionPrints().add("Registered client: " + c1.getName() + " to session: " + s1.getSessionType() + " on " + s1.getSpecialDate() + " for price: " + s1.getSessionType().getPrice());
+            Gym.getInstance().getSecretary().getActionPrints().add("Registered client: " + c1.getName() + " to session: " + s1.getSessionType() + " on " + s1.getSpecialDate() + " for price: " + s1.getPrice());
         }
 
     }
@@ -98,11 +98,11 @@ public class RegisterClientToSession {
     }
 
     private boolean isFull(Session s1) {
-        return this.clientToSessionListMap.get(s1).size() >= s1.getSessionType().getCapacity();
+        return this.clientToSessionListMap.get(s1).size() >= s1.getCapacity();
     }
 
     private boolean canPay(Client c1, Session s1) {
-        return c1.getPerson().getBalance() >= s1.getSessionType().getPrice();
+        return c1.getPerson().getBalance() >= s1.getPrice();
     }
 
 

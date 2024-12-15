@@ -2,7 +2,7 @@ package gym.management;
 import gym.Exception.InstructorNotQualifiedException;
 import gym.management.Sessions.*;
 
-public class SessionFactory {
+class SessionFactory {
 
     public static Session createSession(SessionType type, String date, ForumType forum, Instructor instructor) {
 
@@ -10,6 +10,26 @@ public class SessionFactory {
             throw new InstructorNotQualifiedException("Error: Instructor is not qualified to conduct this session type.");
         }
 
-        return new Session(type, date, forum, instructor);
+        switch (type) {
+            case ThaiBoxing -> {
+                return new ThaiBoxingSession(date, forum, instructor);
+            }
+
+            case MachinePilates -> {
+                return new MachinePilatesSession(date, forum, instructor);
+            }
+
+            case Pilates -> {
+                return new PilatesSession(date, forum, instructor);
+            }
+
+            case Ninja -> {
+                return new NinjaSession(date, forum, instructor);
+            }
+
+            default -> {
+                return null;
+            }
+        }
     }
 }

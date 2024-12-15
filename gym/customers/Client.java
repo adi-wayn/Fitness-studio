@@ -1,9 +1,10 @@
 package gym.customers;
-import gym.Gym;
+import gym.management.Gym;
 import gym.management.MessageObserver;
+import gym.management.Registrable;
 import java.util.ArrayList;
 
-public class Client implements MessageObserver {
+public class Client implements MessageObserver, Registrable {
     private final ArrayList<String> notifications;
     private final Person person;
 
@@ -16,6 +17,7 @@ public class Client implements MessageObserver {
         return person;
     }
 
+    @Override
     public int getId(){
         return this.person.getId();
     }

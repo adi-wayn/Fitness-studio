@@ -1,5 +1,3 @@
-package gym;
-
 import gym.Exception.*;
 import gym.customers.*;
 import gym.management.*;
@@ -24,7 +22,6 @@ public class Main {
         Gym gym = Gym.getInstance();
         gym.setName("CrossFit");
         gym.setSecretary(p1, 9000);
-
 
         Secretary gymSecretary = gym.getSecretary();
 
@@ -82,13 +79,13 @@ public class Main {
         gymSecretary.registerClientToLesson(c1, s3);
         gymSecretary.registerClientToLesson(c5, s2);
         gymSecretary.registerClientToLesson(c5, s2);
+
         gymSecretary.registerClientToLesson(c1, s5);
         gymSecretary.registerClientToLesson(c2, s5);
         gymSecretary.registerClientToLesson(c3, s5);
         gymSecretary.registerClientToLesson(c4, s5);
         gymSecretary.registerClientToLesson(c6, s5);
         gymSecretary.registerClientToLesson(c7, s5);
-
 
 
         try{

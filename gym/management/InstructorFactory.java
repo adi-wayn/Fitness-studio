@@ -3,7 +3,7 @@ import gym.customers.Person;
 import gym.management.Sessions.SessionType;
 import java.util.List;
 
-public class InstructorFactory {
+class InstructorFactory {
 
     public static Instructor createInstructor(Person person, int hourlyRate, List<SessionType> sessionTypes) {
         if (sessionTypes == null || sessionTypes.isEmpty()) {

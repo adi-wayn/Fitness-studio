@@ -1,38 +1,35 @@
 package gym.management.Sessions;
-import gym.Gym;
+import gym.management.Gym;
 import gym.management.Instructor;
 import gym.management.RegisterClientToSession;
+import gym.management.Registrable;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
-public class Session {
+public abstract class Session implements Registrable {
     private static int sessionIdCounter = 1;
     private int sessionId;
-    private final SessionType sessionType;
     private final String date;
     private final ForumType forumType;
     private final Instructor instructor;
 
-    public Session(SessionType sessionType, String date, ForumType forumType,Instructor instructor) {
+
+    public Session(String date, ForumType forumType,Instructor instructor) {
         this.sessionId = sessionIdCounter;
         sessionIdCounter++;
-        this.sessionType = sessionType;
         this.date = date;
         this.forumType = forumType;
         this.instructor = instructor;
     }
 
-    public int getSessionId() {
+    @Override
+    public int getId() {
         return this.sessionId;
     }
 
     public Instructor getInstructor() {
         return this.instructor;
-    }
-
-    public SessionType getSessionType() {
-        return sessionType;
     }
 
     public ForumType getForumType() {
@@ -60,10 +57,16 @@ public class Session {
         return eventDateTime.isBefore(currentDateTime);
     }
 
+    public abstract SessionType getSessionType();
+
+    public abstract int getPrice();
+
+    public abstract int getCapacity();
+
     @Override
     public String toString() {
-        return "Session Type: " + sessionType + " | Date: " + date + " | Forum: " + forumType + " | Instructor: " + instructor.getPerson().getName() +
-                " | Participants: " + RegisterClientToSession.getInstance().getClientListMap(Gym.getInstance().getSecretary().getKey()).get(this).size() + "/" + sessionType.getCapacity();
+        return "Session Type: " + this.getSessionType() + " | Date: " + date + " | Forum: " + forumType + " | Instructor: " + instructor.getPerson().getName() +
+                " | Participants: " + RegisterClientToSession.getInstance().getClientListMap(Gym.getInstance().getSecretary().getKey()).get(this).size() + "/" + this.getCapacity();
     }
 
 }

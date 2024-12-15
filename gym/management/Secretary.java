@@ -1,15 +1,16 @@
 package gym.management;
-import gym.Gym;
 import gym.customers.*;
 import gym.Exception.*;
 import gym.management.Sessions.*;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Secretary implements Manageable {
     private final Person person;
+    private static final Registry<Client> clientRegistry = new Registry<>();
+    private static final Registry<Instructor> instructorRegistry = new Registry<>();
+    private static final Registry<Session> sessionRegistry = new Registry<>();
     private static final List<String> actionPrints = new ArrayList<>();
     private final String secretaryKey = "E|Me@!(@bTx)GST.";
 
@@ -21,6 +22,22 @@ public class Secretary implements Manageable {
         return this.person;
     }
 
+    @Override
+    public Registry<Client> getClientRegistry() {
+        return clientRegistry;
+    }
+
+    @Override
+    public Registry<Instructor> getInstructorRegistry() {
+        return instructorRegistry;
+    }
+
+    @Override
+    public Registry<Session> getSessionRegistry() {
+        return sessionRegistry;
+    }
+
+    @Override
     public List<String> getActionPrints() {
         return actionPrints;
     }
@@ -31,7 +48,7 @@ public class Secretary implements Manageable {
             return null;
 
         Client newClient = ClientFactory.createClient(person);
-        ClientRegistry.getInstance().addClient(newClient, this.secretaryKey);
+        clientRegistry.add(newClient, this.secretaryKey);
         actionPrints.add("Registered new client: " + person.getName());
 
         return newClient;
@@ -42,10 +59,10 @@ public class Secretary implements Manageable {
         if (!isCurrentSecretary())
             return;
 
-        if (!ClientRegistry.getInstance().isClientRegistered(client, this.secretaryKey))
+        if (!clientRegistry.isRegistered(client, this.secretaryKey))
             throw new ClientNotRegisteredException("Error: Registration is required before attempting to unregister");
 
-        ClientRegistry.getInstance().removeClient(client , this.secretaryKey);
+        clientRegistry.remove(client , this.secretaryKey);
         actionPrints.add("Unregistered client: " + client.getPerson().getName());
     }
 
@@ -55,8 +72,8 @@ public class Secretary implements Manageable {
             return null;
 
         Instructor instructor = InstructorFactory.createInstructor(person, hourSalary, sessionList);
-        if (!InstructorRegistry.getInstance().isInstructorRegistered(instructor , this.secretaryKey)) {
-            InstructorRegistry.getInstance().addInstructor(instructor , this.secretaryKey);
+        if (!instructorRegistry.isRegistered(instructor , this.secretaryKey)) {
+            instructorRegistry.add(instructor , this.secretaryKey);
             actionPrints.add("Hired new instructor: " + person.getName() + " with salary per hour: " + hourSalary);
             return instructor;
         }
@@ -70,8 +87,8 @@ public class Secretary implements Manageable {
             return null;
 
         Session session = SessionFactory.createSession(sessionType, date, forumType, instructor);
-        if (!SessionRegistry.getInstance().isSessionRegistered(session , this.secretaryKey)) {
-            SessionRegistry.getInstance().addSession(session , this.secretaryKey);
+        if (!sessionRegistry.isRegistered(session , this.secretaryKey)) {
+            sessionRegistry.add(session , this.secretaryKey);
             RegisterClientToSession.getInstance().getClientListMap(this.secretaryKey).put(session, new HashSet<>());
             actionPrints.add("Created new session: " + sessionType + " on " + session.getSpecialDate() + " with instructor: " + instructor.getPerson().getName());
             return session;
@@ -88,16 +105,18 @@ public class Secretary implements Manageable {
     RegisterClientToSession.getInstance().addToMap(s1, c1 ,this.secretaryKey);
     }
 
+    @Override
     public void notify(Session s1, String message) {
         if (!isCurrentSecretary())
             return;
 
         for (Client client : RegisterClientToSession.getInstance().getClientListMap(this.secretaryKey).get(s1)) {
-            client.getNotifications().add(message);
+            client.update(message, this.secretaryKey);
         }
         this.getActionPrints().add("A message was sent to everyone registered for session " + s1.getSessionType() + " on " + s1.getSpecialDate() + " : " + message);
     }
 
+    @Override
     public void notify(String date, String message) {
         if (!isCurrentSecretary())
             return;
@@ -105,12 +124,13 @@ public class Secretary implements Manageable {
         for (Session session : RegisterClientToSession.getInstance().getClientListMap(this.secretaryKey).keySet()) {
             if (session.getDate().substring(0, 10).equals(date)) {
                 for (Client client : RegisterClientToSession.getInstance().getClientListMap(this.secretaryKey).get(session)) {
-                   client.getNotifications().add(message);
+                    client.update(message, this.secretaryKey);
                 }
             }
         }
         this.getActionPrints().add("A message was sent to everyone registered for a session on " + rearrangeDate(date)  + " : " + message);
     }
+
     private String rearrangeDate(String date) {
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -118,28 +138,35 @@ public class Secretary implements Manageable {
         return parsedDate.format(outputFormatter);
     }
 
+    @Override
     public void notify(String message) {
         if (!isCurrentSecretary())
             return;
 
-        for (Client client :ClientRegistry.getInstance().getAllClients(this.secretaryKey) )
-           client.getNotifications().add(message);
+        for (Client client :clientRegistry.getAll(this.secretaryKey) )
+            client.update(message, this.secretaryKey);
 
         this.getActionPrints().add("A message was sent to all gym clients: " + message);
     }
 
-
+    @Override
     public void paySalaries() {
+        this.person.addToBalance(Gym.getInstance().getSecretarySalary(), this.secretaryKey);
+        Gym.getInstance().subtractFromGymBalance(Gym.getInstance().getSecretarySalary());
+
         if (!isCurrentSecretary())
             return;
 
-        for (Session session : SessionRegistry.getInstance().getAllSessions(this.secretaryKey))
+        for (Session session : sessionRegistry.getAll(this.secretaryKey)) {
             session.getInstructor().getPerson().addToBalance(session.getInstructor().getHourSalary(), this.secretaryKey);
+            Gym.getInstance().subtractFromGymBalance(session.getInstructor().getHourSalary());
+        }
 
         this.getActionPrints().add("Salaries have been paid to all employees");
 
    }
 
+   @Override
     public void printActions() {
         if (!isCurrentSecretary())
             return;
@@ -153,6 +180,7 @@ public class Secretary implements Manageable {
         return Gym.getInstance().getSecretary().equals(this);
     }
 
+    @Override
     public String getKey(){
         if (!isCurrentSecretary())
             return null;

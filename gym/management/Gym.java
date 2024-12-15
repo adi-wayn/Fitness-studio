@@ -1,12 +1,8 @@
-package gym;
-import gym.management.ClientRegistry;
-import gym.management.InstructorRegistry;
-import gym.management.Secretary;
+package gym.management;
 import gym.customers.Person;
-import gym.management.SessionRegistry;
 
 public class Gym {
-    private static final Gym gym = new Gym();
+    private static Gym gym;
     private String name;
     private Secretary secretary;
     private int gymBalance;
@@ -16,6 +12,10 @@ public class Gym {
     }
 
     public static Gym getInstance() {
+        if (gym == null) {
+            gym = new Gym();
+        }
+
         return gym;
     }
 
@@ -44,12 +44,12 @@ public class Gym {
         return this.secretary;
     }
 
-    public int getGymBalance() {
-        return this.gymBalance;
-    }
-
     public void addToGymBalance(int amount) {
         this.gymBalance += amount;
+    }
+
+    public void subtractFromGymBalance(int amount) {
+        this.gymBalance -= amount;
     }
 
     @Override
@@ -59,14 +59,15 @@ public class Gym {
                 "Gym Balance: " + gymBalance + "\n" +
                 "\n" +
                 "Clients Data:" + "\n" +
-                ClientRegistry.getInstance() +
-                "\n" +
+                this.secretary.getClientRegistry() +
+                "\n" + "\n" +
                 "Employees Data:" + "\n" +
-                InstructorRegistry.getInstance() +
+                this.secretary.getInstructorRegistry() +
+                "\n"+
                 secretary + "\n" +
                 "\n" +
                 "Sessions Data:" + "\n" +
-                SessionRegistry.getInstance();
+                this.secretary.getSessionRegistry();
 
     }
 }
