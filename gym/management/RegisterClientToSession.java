@@ -31,7 +31,7 @@ public class RegisterClientToSession {
         return clientToSessionListMap;
     }
 
-    public void addToMap(Session s1, Client c1 , String key) throws SecurityException {
+    public void addToMap(Session s1, Client c1 , String key) throws SecurityException, ClientNotRegisteredException, DuplicateClientException {
         if (!Gym.getInstance().getSecretary().getKey().equals(key))
             throw new SecurityException("Unmatched key.\nAccess denied.");
 
